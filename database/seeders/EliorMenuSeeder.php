@@ -4,9 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Webkul\Category\Models\Category;
 use Webkul\CMS\Models\Page;
-use Webkul\Core\Models\CoreConfig;
 
 class EliorMenuSeeder extends Seeder
 {
@@ -19,7 +17,7 @@ class EliorMenuSeeder extends Seeder
 
         if ($aboutPage) {
             DB::table('cms_page_translations')->where('cms_page_id', $aboutPage->id)->update([
-                'page_title' => 'About Us'
+                'page_title' => 'About Us',
             ]);
         }
 
@@ -29,76 +27,72 @@ class EliorMenuSeeder extends Seeder
 
         if ($qualityPage) {
             DB::table('cms_page_translations')->where('cms_page_id', $qualityPage->id)->update([
-                'page_title' => 'Quality'
+                'page_title' => 'Quality',
             ]);
         }
 
         // 2. Build the Custom Menu Items array
         $menuItems = [
             [
-                'type' => 'category',
-                'id' => 97, // We checked that category_translations ID 97 (category_id 88) is "All Products"
-                'title' => 'Products'
+                'type' => 'custom',
+                'id' => 'custom_products',
+                'title' => 'Products',
+                'url' => url('/products'),
             ],
             [
                 'type' => 'cms',
                 'id' => 'about-us',
-                'title' => 'About Us'
+                'title' => 'About Us',
             ],
             [
                 'type' => 'cms',
                 'id' => 'quality',
-                'title' => 'Quality'
+                'title' => 'Quality',
             ],
             [
                 'type' => 'custom',
                 'id' => 'custom_recipes',
                 'title' => 'Recipes',
-                'url' => url('/recipes')
+                'url' => url('/recipes'),
             ],
             [
                 'type' => 'custom',
                 'id' => 'custom_contact',
                 'title' => 'Contact',
-                'url' => url('/contact-us')
-            ]
+                'url' => url('/contact-us'),
+            ],
         ];
-        
-        $productsCategory = Category::whereHas('translations', function ($q) {
-            $q->where('slug', 'products');
-        })->first();
 
-        $menuItems[0]['id'] = $productsCategory ? $productsCategory->id : 1;
-
-        // 3. Set the Core Config for Custom Menu
+        // 3. Set the Core Config for Custom Menu (both channel-specific and global)
         $configKey = 'general.design.categories.custom_menu_items';
-        
-        $config = CoreConfig::where('code', $configKey)->first();
-        if ($config) {
-            $config->value = json_encode($menuItems);
-            $config->save();
-        } else {
-            CoreConfig::create([
-                'code' => $configKey,
-                'value' => json_encode($menuItems),
-                'channel_code' => 'default',
-                'locale_code' => null
-            ]);
-        }
-        
-        // Also ensure category_view is custom
         $viewConfigKey = 'general.design.categories.category_view';
-        $viewConfig = CoreConfig::where('code', $viewConfigKey)->first();
-        if ($viewConfig) {
-            $viewConfig->value = 'custom';
-            $viewConfig->save();
-        } else {
-            CoreConfig::create([
-                'code' => $viewConfigKey,
-                'value' => 'custom',
-                'channel_code' => 'default',
-                'locale_code' => null
-            ]);
+
+        foreach (['default', null] as $channelCode) {
+            DB::table('core_config')->updateOrInsert(
+                [
+                    'code' => $configKey,
+                    'channel_code' => $channelCode,
+                    'locale_code' => null,
+                ],
+                [
+                    'value' => json_encode($menuItems),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+
+            DB::table('core_config')->updateOrInsert(
+                [
+                    'code' => $viewConfigKey,
+                    'channel_code' => $channelCode,
+                    'locale_code' => null,
+                ],
+                [
+                    'value' => 'custom',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
         }
     }
 }

@@ -329,7 +329,11 @@
                                     </a>
                                 @endif
                             @elseif ($item['type'] === 'custom')
-                                <a href="{{ $item['url'] }}" class="flex items-center justify-between py-3 text-sm font-semibold uppercase tracking-wider {{ request()->fullUrlIs($item['url'].'*') ? 'text-elior-botanical font-bold' : 'text-elior-charcoal hover:text-elior-botanical' }} border-b border-elior-border/30 transition-colors">
+                                @php
+                                    $targetPath = trim(parse_url($item['url'], PHP_URL_PATH) ?? '', '/');
+                                    $isCustomActive = request()->fullUrlIs($item['url'].'*') || ($targetPath && request()->is($targetPath.'*'));
+                                @endphp
+                                <a href="{{ $item['url'] }}" class="flex items-center justify-between py-3 text-sm font-semibold uppercase tracking-wider {{ $isCustomActive ? 'text-elior-botanical font-bold' : 'text-elior-charcoal hover:text-elior-botanical' }} border-b border-elior-border/30 transition-colors">
                                     <span>{{ $item['title'] }}</span>
                                     <span class="icon-arrow-right text-xs text-elior-muted"></span>
                                 </a>

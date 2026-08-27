@@ -80,7 +80,11 @@
                             </a>
                         @endif
                     @elseif ($item['type'] === 'custom')
-                        <a href="{{ $item['url'] }}" class="text-xs uppercase tracking-[0.14em] font-semibold {{ request()->fullUrlIs($item['url'].'*') ? 'text-elior-botanical font-bold' : 'text-elior-charcoal hover:text-elior-botanical' }} transition-colors">
+                        @php
+                            $targetPath = trim(parse_url($item['url'], PHP_URL_PATH) ?? '', '/');
+                            $isCustomActive = request()->fullUrlIs($item['url'].'*') || ($targetPath && request()->is($targetPath.'*'));
+                        @endphp
+                        <a href="{{ $item['url'] }}" class="text-xs uppercase tracking-[0.14em] font-semibold {{ $isCustomActive ? 'text-elior-botanical font-bold' : 'text-elior-charcoal hover:text-elior-botanical' }} transition-colors">
                             {{ $item['title'] }}
                         </a>
                     @endif
