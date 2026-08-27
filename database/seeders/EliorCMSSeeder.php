@@ -10,14 +10,39 @@ class EliorCMSSeeder extends Seeder
 {
     /**
      * Seed ELIOR custom CMS editorial & policy pages.
-     *
-     * @return void
      */
     public function run(): void
     {
         $this->command->info('=== ELIOR CMS Pages Seeder ===');
 
         $now = Carbon::now();
+
+        // 1. Copy CMS Media Assets from package seeders
+        $cmsPackageDir = base_path('packages/Webkul/Installer/src/Resources/assets/images/seeders/cms');
+        $storageCmsDir = storage_path('app/public/theme/cms');
+        $publicCmsDir = public_path('storage/theme/cms');
+
+        if (! file_exists($storageCmsDir)) {
+            mkdir($storageCmsDir, 0777, true);
+        }
+        if (! file_exists($publicCmsDir)) {
+            mkdir($publicCmsDir, 0777, true);
+        }
+
+        $cmsFiles = [
+            'elior-about-story.jpg',
+            'elior-about-story.webp',
+            'elior-quality-lab.jpg',
+            'elior-quality-lab.webp',
+        ];
+
+        foreach ($cmsFiles as $file) {
+            $pkgFile = $cmsPackageDir.'/'.$file;
+            if (file_exists($pkgFile)) {
+                copy($pkgFile, $storageCmsDir.'/'.$file);
+                copy($pkgFile, $publicCmsDir.'/'.$file);
+            }
+        }
 
         $pages = [
             [
@@ -1357,25 +1382,25 @@ Plot 42, Road No. 36, Jubilee Hills, Hyderabad, Telangana 500033, India</p>',
 
             foreach ($locales as $locale) {
                 DB::table('cms_page_translations')->updateOrInsert(
-                [
-                    'cms_page_id' => $pageId,
-                    'locale'      => $locale,
-                ],
-                [
-                    'url_key'          => $urlKey,
-                    'page_title'       => $pageTitle,
-                    'meta_title'       => $metaTitle,
-                    'meta_description' => $metaDesc,
-                    'meta_keywords'    => $metaKeywords,
-                    'html_content'     => $htmlContent,
-                ]
-            );
+                    [
+                        'cms_page_id' => $pageId,
+                        'locale' => $locale,
+                    ],
+                    [
+                        'url_key' => $urlKey,
+                        'page_title' => $pageTitle,
+                        'meta_title' => $metaTitle,
+                        'meta_description' => $metaDesc,
+                        'meta_keywords' => $metaKeywords,
+                        'html_content' => $htmlContent,
+                    ]
+                );
             }
 
             // Ensure mapped to channel 1
             DB::table('cms_page_channels')->updateOrInsert([
                 'cms_page_id' => $pageId,
-                'channel_id'  => 1,
+                'channel_id' => 1,
             ]);
         }
 

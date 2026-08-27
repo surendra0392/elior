@@ -8,10 +8,6 @@
     // Query 8 Featured Products
     $featuredProducts = app('Webkul\Product\Repositories\ProductRepository')->getModel()
         ->whereHas('attribute_values', function($q) {
-            $q->whereHas('attribute', fn($q2) => $q2->where('code', 'featured'))
-              ->where('boolean_value', 1);
-        })
-        ->whereHas('attribute_values', function($q) {
             $q->whereHas('attribute', fn($q2) => $q2->where('code', 'status'))
               ->where('boolean_value', 1);
         })
@@ -25,10 +21,6 @@
     // Query 4 Best Sellers
     $bestSellers = app('Webkul\Product\Repositories\ProductRepository')->getModel()
         ->whereHas('attribute_values', function($q) {
-            $q->whereHas('attribute', fn($q2) => $q2->where('code', 'best_sellers'))
-              ->where('boolean_value', 1);
-        })
-        ->whereHas('attribute_values', function($q) {
             $q->whereHas('attribute', fn($q2) => $q2->where('code', 'status'))
               ->where('boolean_value', 1);
         })
@@ -36,7 +28,7 @@
             $q->whereHas('attribute', fn($q2) => $q2->where('code', 'visible_individually'))
               ->where('boolean_value', 1);
         })
-        ->orderBy('updated_at', 'desc')
+        ->orderBy('id', 'asc')
         ->take(4)->get();
 
     // Query 3 featured recipes for Journal section
