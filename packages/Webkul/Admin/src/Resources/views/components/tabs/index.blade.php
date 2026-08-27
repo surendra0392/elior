@@ -1,0 +1,65 @@
+@props(['position' => 'left'])
+
+<v-tabs
+    position="{{ $position }}"
+    {{ $attributes }}
+>
+    <x-admin::shimmer.tabs />
+</v-tabs>
+
+@pushOnce('scripts')
+    <script
+        type="text/x-template"
+        id="v-tabs-template"
+    >
+        <div>
+            <div
+                class="flex justify-center gap-4 bg-transparent border-b border-slate-200 text-slate-600 pt-2 max-sm:hidden"
+                :style="positionStyles"
+            >
+                <div
+                    v-for="tab in tabs"
+                    class="cursor-pointer px-3 pb-3 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-all"
+                    :class="{'!border-[#205132] border-b-2 !text-[#205132] font-bold': tab.isActive }"
+                    @click="change(tab)"
+                >
+                    @{{ tab.title }}
+                </div>
+            </div>
+
+            <div>
+                {{ $slot }}
+            </div>
+        </div>
+    </script>
+
+    <script type="module">
+        app.component('v-tabs', {
+            template: '#v-tabs-template',
+
+            props: ['position'],
+
+            data() {
+                return {
+                    tabs: []
+                }
+            },
+
+            computed: {
+                positionStyles() {
+                    return [
+                        `justify-content: ${this.position}`
+                    ];
+                },
+            },
+
+            methods: {
+                change(selectedTab) {
+                    this.tabs.forEach(tab => {
+                        tab.isActive = (tab.title == selectedTab.title);
+                    });
+                },
+            },
+        });
+    </script>
+@endPushOnce

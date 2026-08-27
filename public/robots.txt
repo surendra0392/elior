@@ -1,0 +1,22 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /customer/
+Disallow: /search*
+Disallow: *?*category_id=
+Disallow: *?*sort=
+Disallow: *?*limit=
+Disallow: *?*mode=
+
+Allow: /
+Allow: /products
+Allow: /botanical-powders
+Allow: /functional-blends
+Allow: /culinary-ingredients
+Allow: /wellness-essentials
+Allow: /page/*
+Allow: /contact-us
+Allow: /storage/
+
+Content-Signal: search=yes, ai-train=no, ai-input=no
+Sitemap: http://elior.test/sitemap.xml

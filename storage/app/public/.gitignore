@@ -1,0 +1,16 @@
+*
+!data-transfer
+!theme/
+!theme/**
+!recipes/
+!recipes/**
+!admin/
+!admin/**
+!channel/
+!channel/**
+!category/
+!category/**
+!products/
+!products/**
+!.gitignore
+

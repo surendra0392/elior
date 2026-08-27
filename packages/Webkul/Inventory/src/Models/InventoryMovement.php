@@ -1,0 +1,28 @@
+<?php
+
+namespace Webkul\Inventory\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Webkul\Product\Models\ProductProxy;
+use Webkul\User\Models\AdminProxy;
+use Webkul\Inventory\Contracts\InventoryMovement as InventoryMovementContract;
+
+class InventoryMovement extends Model implements InventoryMovementContract
+{
+    protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function product()
+    {
+        return $this->belongsTo(ProductProxy::modelClass());
+    }
+
+    public function inventory_source()
+    {
+        return $this->belongsTo(InventorySourceProxy::modelClass());
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(AdminProxy::modelClass(), 'user_id');
+    }
+}
