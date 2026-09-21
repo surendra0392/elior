@@ -373,16 +373,22 @@ return [
         'sort' => 7,
         'icon' => '',
     ], [
+        'key' => 'settings.shipping_zones',
+        'name' => 'Delivery Setup',
+        'route' => 'admin.settings.shipping.zones.index',
+        'sort' => 8,
+        'icon' => '',
+    ], [
         'key' => 'settings.themes',
         'name' => 'admin::app.components.layouts.sidebar.themes',
         'route' => 'admin.settings.themes.index',
-        'sort' => 8,
+        'sort' => 9,
         'icon' => '',
     ], [
         'key' => 'settings.taxes',
         'name' => 'admin::app.components.layouts.sidebar.taxes',
         'route' => 'admin.settings.taxes.categories.index',
-        'sort' => 9,
+        'sort' => 10,
         'icon' => '',
     ], [
         'key' => 'settings.taxes.tax_categories',
@@ -400,7 +406,7 @@ return [
         'key' => 'settings.data_transfer',
         'name' => 'admin::app.components.layouts.sidebar.data-transfer',
         'route' => 'admin.settings.data_transfer.imports.index',
-        'sort' => 10,
+        'sort' => 11,
         'icon' => '',
     ], [
         'key' => 'settings.data_transfer.imports',
@@ -409,8 +415,6 @@ return [
         'sort' => 1,
         'icon' => '',
     ],
-
-
 
     /**
      * Configuration.

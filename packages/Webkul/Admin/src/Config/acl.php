@@ -1200,6 +1200,18 @@ return [
         ],
         'sort' => 3,
     ], [
+        'key' => 'settings.shipping_zones',
+        'name' => 'Delivery Setup',
+        'route' => [
+            'admin.settings.shipping.zones.index',
+            'admin.settings.shipping.zones.create',
+            'admin.settings.shipping.zones.store',
+            'admin.settings.shipping.zones.edit',
+            'admin.settings.shipping.zones.update',
+            'admin.settings.shipping.zones.delete',
+        ],
+        'sort' => 8,
+    ], [
         'key' => 'settings.taxes',
         'name' => 'admin::app.acl.taxes',
         'route' => 'admin.settings.taxes.categories.index',

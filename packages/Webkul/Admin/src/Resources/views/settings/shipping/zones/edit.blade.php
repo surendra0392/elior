@@ -186,14 +186,26 @@
         <script type="module">
             @php
                 $groupedStates = core()->groupedStatesByCountries();
-                $zoneLocations = $zone->locations->map(function($loc) use ($groupedStates) {
+                $defaultCountry = config('app.default_country', 'IN');
+                $zoneLocations = $zone->locations->map(function($loc) use ($groupedStates, $defaultCountry) {
                     $countryCode = '';
                     if ($loc->location_type === 'state') {
-                        foreach ($groupedStates as $cCode => $states) {
-                            foreach ($states as $state) {
+                        if (isset($groupedStates[$defaultCountry])) {
+                            foreach ($groupedStates[$defaultCountry] as $state) {
                                 if ($state->code === $loc->location_code) {
-                                    $countryCode = $cCode;
-                                    break 2;
+                                    $countryCode = $defaultCountry;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (! $countryCode) {
+                            foreach ($groupedStates as $cCode => $states) {
+                                foreach ($states as $state) {
+                                    if ($state->code === $loc->location_code) {
+                                        $countryCode = $cCode;
+                                        break 2;
+                                    }
                                 }
                             }
                         }
